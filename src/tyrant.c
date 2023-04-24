@@ -5,6 +5,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+const int TYRANT_VERSION_MAJOR = TYRANT_API_VERSION_MAJOR;
+const int TYRANT_VERSION_MINOR = TYRANT_API_VERSION_MINOR;
+const int TYRANT_VERSION_PATCH = TYRANT_API_VERSION_PATCH;
+
+const char TYRANT_VERSION_STRING[] = TYRANT_API_VERSION_STRING;
+
 void *tyrant_alloc(size_t size)
 {
 	if (size == 0) {

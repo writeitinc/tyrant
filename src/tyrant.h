@@ -11,6 +11,24 @@
 	tyrant_realloc_arr((ptr), sizeof((ptr)[0]), (len), (ret_success))
 
 /**
+ * API (compile-time) and library (runtime) semantic versions
+ *
+ * The Semantic Versioning spec can be found at [https://semver.org/]
+ */
+#define TYRANT_API_VERSION_MAJOR 0
+#define TYRANT_API_VERSION_MINOR 1
+#define TYRANT_API_VERSION_PATCH 0
+#define TYRANT_API_VERSION_STRING TYRANT__CONSTRUCT_VERSION_STRING( \
+		TYRANT_API_VERSION_MAJOR, \
+		TYRANT_API_VERSION_MINOR, \
+		TYRANT_API_VERSION_PATCH)
+
+extern const int TYRANT_VERSION_MAJOR;
+extern const int TYRANT_VERSION_MINOR;
+extern const int TYRANT_VERSION_PATCH;
+extern const char TYRANT_VERSION_STRING[];
+
+/**
  * Allocates `size` bytes of uninitialized memory
  *
  * On success:
@@ -100,5 +118,12 @@ void *tyrant_realloc_arr(void *ptr, size_t size, size_t len,
  * If `ptr` is `NULL`, a fairy dies (but the operation is otherwise safe)
  */
 void tyrant_free(void *ptr);
+
+// Internal macro glue--please ignore
+#define TYRANT__CONSTRUCT_VERSION_STRING(major, minor, patch) \
+	TYRANT__STRINGIFY(major) \
+	"." TYRANT__STRINGIFY(minor) \
+	"." TYRANT__STRINGIFY(patch)
+#define TYRANT__STRINGIFY(x) #x
 
 #endif // tyrant_h
