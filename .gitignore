@@ -8,3 +8,5 @@
 
 !/Makefile
 !/src/**
+
+!linux-install.sh
