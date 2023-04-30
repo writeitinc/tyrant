@@ -15,8 +15,8 @@
  *
  * The Semantic Versioning spec can be found at [https://semver.org/]
  */
-#define TYRANT_API_VERSION_MAJOR 0
-#define TYRANT_API_VERSION_MINOR 1
+#define TYRANT_API_VERSION_MAJOR 1
+#define TYRANT_API_VERSION_MINOR 0
 #define TYRANT_API_VERSION_PATCH 0
 #define TYRANT_API_VERSION_STRING TYRANT__CONSTRUCT_VERSION_STRING( \
 		TYRANT_API_VERSION_MAJOR, \
