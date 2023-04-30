@@ -70,6 +70,26 @@ dirs: $(STATIC_OBJ_DIR)/ $(SHARED_OBJ_DIR)/ $(LIB_DIR)/ $(INCLUDE_DIR)/
 %/:
 	mkdir -p $@
 
+# install
+
+VERSION = $(VERSION_MAJOR).$(VERSION_MINOR).$(VERSION_PATCH)
+VERSION_MAJOR = 0
+VERSION_MINOR = 1
+VERSION_PATCH = 0
+
+DEST_DIR = /
+
+.PHONY: install-linuxx
+install-linux:
+	install -Dm755 "build/lib/libtyrant.so" '$(DEST_DIR)/usr/lib/libtyrant.so.$(VERSION)'
+	ln -sn "libtyrant.so.$(VERSION)" "$(DEST_DIR)/usr/lib/libtyrant.so.$(VERSION_MAJOR)"
+	ln -sn "libtyrant.so.$(VERSION_MAJOR)" "$(DEST_DIR)/usr/lib/libtyrant.so"
+	
+	install -Dm644 -t "$(DEST_DIR)/usr/lib/" "build/lib/libtyrant.a"
+	install -Dm644 -t "$(DEST_DIR)/usr/include/tyrant/" "build/include/tyrant/tyrant.h"
+	install -Dm644 -t "$(DEST_DIR)/usr/share/licenses/tyrant/" "LICENSE"
+	install -Dm644 -t "$(DEST_DIR)/usr/share/doc/tyrant/" "README.md"
+
 # clean
 
 .PHONY: clean
