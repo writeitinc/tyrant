@@ -10,6 +10,8 @@
 #define TYRANT_REALLOC_ARR(ptr, len, ret_success) \
 	tyrant_realloc_arr((ptr), sizeof((ptr)[0]), (len), (ret_success))
 
+#define TYRANT_NELEMS(arr) (sizeof(arr) / sizeof((arr)[0]))
+
 /**
  * API (compile-time) and library (runtime) semantic versions
  *
