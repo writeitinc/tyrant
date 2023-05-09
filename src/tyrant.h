@@ -119,6 +119,36 @@ void *tyrant_realloc_arr(void *ptr, size_t size, size_t len,
  */
 void tyrant_free(void *ptr);
 
+/**
+ * Multiplies two numbers with an upper bound
+ *
+ * If the product would be greater than `cap`, `cap` is returned and
+ * `*ret_capped` is set to `true`.
+ * Otherwise, `a * b` is returned and `*ret_capped` is set to `false`.
+ */
+static inline size_t tyrant_multiply_size_capped(size_t a, size_t b, size_t cap,
+		bool *ret_capped);
+
+/* ### Inline definitions ### */
+
+static inline size_t tyrant_multiply_size_capped(size_t a, size_t b, size_t cap,
+		bool *ret_capped)
+{
+	if (a == 0 || b == 0) {
+		*ret_capped = false;
+		return 0;
+	}
+
+	if (a > cap || b > cap
+			|| a > cap / b) {
+		*ret_capped = true;
+		return cap;
+	}
+
+	*ret_capped = false;
+	return a * b;
+}
+
 // Internal macro glue--please ignore
 #define TYRANT__CONSTRUCT_VERSION_STRING(major, minor, patch) \
 	TYRANT__STRINGIFY(major) \
