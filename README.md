@@ -14,7 +14,7 @@ if (SIZE_MAX / sizeof(arr[0]) < len) {
 
 arr = malloc(sizeof(arr[0]) * len);
 if (!arr) {
-	goto cleanup_43;
+	goto cleanup_42;
 }
 ```
 ```c
