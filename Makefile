@@ -38,19 +38,20 @@ HEADERS = $(wildcard src/*.h)
 STATIC_OBJS = $(patsubst src/%.c, $(STATIC_OBJ_DIR)/%.o, $(SOURCES))
 SHARED_OBJS = $(patsubst src/%.c, $(SHARED_OBJ_DIR)/%.o, $(SOURCES))
 
+PIC_FLAGS = -fPIC
 RELRO_FLAGS = -Wl,-z,relro,-z,now
 
 $(STATIC_LIB): $(STATIC_OBJS)
 	$(AR) crs $@ $^
 
 $(SHARED_LIB): $(SHARED_OBJS)
-	$(CC) -shared $(RELRO_FLAGS) -o $@ $^
+	$(CC) -o $@ $^ -shared $(PIC_FLAGS) $(RELRO_FLAGS)
 
 $(STATIC_OBJ_DIR)/%.o: src/%.c $(HEADERS)
-	$(CC) -c -o $@ $< $(CFLAGS) $(DEBUG) $(DEFINES)
+	$(CC) -o $@ $< -c $(CFLAGS) $(DEBUG) $(DEFINES)
 
 $(SHARED_OBJ_DIR)/%.o: src/%.c $(HEADERS)
-	$(CC) -c -fPIC -o $@ $< $(CFLAGS) $(DEBUG) $(DEFINES)
+	$(CC) -o $@ $< -c $(PIC_FLAGS) $(CFLAGS) $(DEBUG) $(DEFINES)
 
 # headers
 
