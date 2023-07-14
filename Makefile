@@ -4,7 +4,10 @@ CFLAGS = $(WFLAGS) $(OPTIM)
 
 WFLAGS = -Wall -Wextra -pedantic -std=c99
 
+WORKING_DIR = .
 BUILD_DIR = build
+
+SRC_DIR = $(WORKING_DIR)/src
 
 INCLUDE_DIR = $(BUILD_DIR)/include
 HEADER_DIR = $(INCLUDE_DIR)/$(NAME)
@@ -33,10 +36,10 @@ debug: dirs headers $(LIBRARIES)
 
 # library
 
-SOURCES = $(wildcard src/*.c)
-HEADERS = $(wildcard src/*.h)
-STATIC_OBJS = $(patsubst src/%.c, $(STATIC_OBJ_DIR)/%.o, $(SOURCES))
-SHARED_OBJS = $(patsubst src/%.c, $(SHARED_OBJ_DIR)/%.o, $(SOURCES))
+SOURCES = $(wildcard $(SRC_DIR)/*.c)
+HEADERS = $(wildcard $(SRC_DIR)/*.h)
+STATIC_OBJS = $(patsubst $(SRC_DIR)/%.c, $(STATIC_OBJ_DIR)/%.o, $(SOURCES))
+SHARED_OBJS = $(patsubst $(SRC_DIR)/%.c, $(SHARED_OBJ_DIR)/%.o, $(SOURCES))
 
 PIC_FLAGS = -fPIC
 RELRO_FLAGS = -Wl,-z,relro,-z,now
@@ -47,10 +50,10 @@ $(STATIC_LIB): $(STATIC_OBJS)
 $(SHARED_LIB): $(SHARED_OBJS)
 	$(CC) -o $@ $^ -shared $(PIC_FLAGS) $(RELRO_FLAGS)
 
-$(STATIC_OBJ_DIR)/%.o: src/%.c $(HEADERS)
+$(STATIC_OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	$(CC) -o $@ $< -c $(CFLAGS) $(DEBUG) $(DEFINES)
 
-$(SHARED_OBJ_DIR)/%.o: src/%.c $(HEADERS)
+$(SHARED_OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	$(CC) -o $@ $< -c $(PIC_FLAGS) $(CFLAGS) $(DEBUG) $(DEFINES)
 
 # headers
