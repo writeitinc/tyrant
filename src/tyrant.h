@@ -122,6 +122,8 @@ void *tyrant_realloc_arr(void *ptr, size_t size, size_t len,
 void tyrant_free(void *ptr);
 
 /**
+ * [DEPRECATED] -- not well thought out
+ *
  * Adds two numbers with an upper bound
  *
  * If the sum would be greater than `cap`, `cap` is returned and `*ret_capped`
@@ -132,6 +134,8 @@ static inline size_t tyrant_add_size_capped(size_t a, size_t b, size_t cap,
 		bool *ret_capped);
 
 /**
+ * [DEPRECATED] -- not well thought out
+ *
  * Multiplies two numbers with an upper bound
  *
  * If the product would be greater than `cap`, `cap` is returned and
