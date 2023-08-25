@@ -42,13 +42,12 @@ STATIC_OBJS = $(patsubst $(SRC_DIR)/%.c, $(STATIC_OBJ_DIR)/%.o, $(SOURCES))
 SHARED_OBJS = $(patsubst $(SRC_DIR)/%.c, $(SHARED_OBJ_DIR)/%.o, $(SOURCES))
 
 PIC_FLAGS = -fPIC
-RELRO_FLAGS = -Wl,-z,relro,-z,now
 
 $(STATIC_LIB): $(STATIC_OBJS)
 	$(AR) crs $@ $^
 
 $(SHARED_LIB): $(SHARED_OBJS)
-	$(CC) -o $@ $^ -shared $(PIC_FLAGS) $(RELRO_FLAGS)
+	$(CC) -o $@ $^ -shared $(PIC_FLAGS) $(LDFLAGS)
 
 $(STATIC_OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	$(CC) -o $@ $< -c $(CFLAGS) $(DEBUG) $(DEFINES)
