@@ -26,7 +26,7 @@ LIBRARIES = $(STATIC_LIB) $(SHARED_LIB)
 default: release
 
 .PHONY: release
-release: OPTIM = -O3
+release: OPTIM = -O3 $(LTOFLAGS)
 release: dirs headers $(LIBRARIES)
 
 .PHONY: debug
