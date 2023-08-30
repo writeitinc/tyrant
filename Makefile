@@ -1,4 +1,12 @@
+# This Makefile is based on a template (lib.makefile version 1.0.0).
+# See: https://github.com/writeitinc/makefile-templates
+
 NAME = tyrant
+SOURCE_DIR = $(WORKING_DIR)/src
+
+ifndef NAME
+$(error NAME is not set)
+endif
 
 CFLAGS = $(WFLAGS) $(OPTIM)
 
@@ -6,8 +14,6 @@ WFLAGS = -Wall -Wextra -pedantic -std=c99
 
 WORKING_DIR = .
 BUILD_DIR = build
-
-SRC_DIR = $(WORKING_DIR)/src
 
 INCLUDE_DIR = $(BUILD_DIR)/include
 HEADER_DIR = $(INCLUDE_DIR)/$(NAME)
@@ -18,9 +24,9 @@ SHARED_OBJ_DIR = $(OBJ_DIR)/shared
 
 LIB_DIR = $(BUILD_DIR)/lib
 
+LIBRARIES = $(STATIC_LIB) $(SHARED_LIB)
 STATIC_LIB = $(LIB_DIR)/lib$(NAME).a
 SHARED_LIB = $(LIB_DIR)/lib$(NAME).so
-LIBRARIES = $(STATIC_LIB) $(SHARED_LIB)
 
 .PHONY: default
 default: release
@@ -36,10 +42,10 @@ debug: dirs headers $(LIBRARIES)
 
 # library
 
-SOURCES = $(wildcard $(SRC_DIR)/*.c)
-HEADERS = $(wildcard $(SRC_DIR)/*.h)
-STATIC_OBJS = $(patsubst $(SRC_DIR)/%.c, $(STATIC_OBJ_DIR)/%.o, $(SOURCES))
-SHARED_OBJS = $(patsubst $(SRC_DIR)/%.c, $(SHARED_OBJ_DIR)/%.o, $(SOURCES))
+SOURCES = $(wildcard $(SOURCE_DIR)/*.c)
+HEADERS = $(wildcard $(SOURCE_DIR)/*.h)
+STATIC_OBJS = $(patsubst $(SOURCE_DIR)/%.c, $(STATIC_OBJ_DIR)/%.o, $(SOURCES))
+SHARED_OBJS = $(patsubst $(SOURCE_DIR)/%.c, $(SHARED_OBJ_DIR)/%.o, $(SOURCES))
 
 PIC_FLAGS = -fPIC
 
@@ -49,10 +55,10 @@ $(STATIC_LIB): $(STATIC_OBJS)
 $(SHARED_LIB): $(SHARED_OBJS)
 	$(CC) -o $@ $^ -shared $(PIC_FLAGS) $(LDFLAGS)
 
-$(STATIC_OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
+$(STATIC_OBJ_DIR)/%.o: $(SOURCE_DIR)/%.c $(HEADERS)
 	$(CC) -o $@ $< -c $(CFLAGS) $(DEBUG) $(DEFINES)
 
-$(SHARED_OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
+$(SHARED_OBJ_DIR)/%.o: $(SOURCE_DIR)/%.c $(HEADERS)
 	$(CC) -o $@ $< -c $(PIC_FLAGS) $(CFLAGS) $(DEBUG) $(DEFINES)
 
 # headers
@@ -62,13 +68,13 @@ headers: $(HEADER_DIR)
 
 $(HEADER_DIR): $(HEADERS)
 	mkdir -p $@
-	cp -u $^ $@/
+	cp -u -t $@/ $^
 	touch $@
 
 # dirs
 
 .PHONY: dirs
-dirs: $(STATIC_OBJ_DIR)/ $(SHARED_OBJ_DIR)/ $(LIB_DIR)/ $(INCLUDE_DIR)/
+dirs: $(INCLUDE_DIR)/ $(STATIC_OBJ_DIR)/ $(SHARED_OBJ_DIR)/ $(LIB_DIR)/
 
 %/:
 	mkdir -p $@
@@ -80,18 +86,18 @@ VERSION_MAJOR = 1
 VERSION_MINOR = 3
 VERSION_PATCH = 0
 
-DEST_DIR = /
+DEST_DIR = # root
 
-.PHONY: install-linuxx
+.PHONY: install-linux
 install-linux:
-	install -Dm755 "build/lib/libtyrant.so" '$(DEST_DIR)/usr/lib/libtyrant.so.$(VERSION)'
-	ln -sn "libtyrant.so.$(VERSION)" "$(DEST_DIR)/usr/lib/libtyrant.so.$(VERSION_MAJOR)"
-	ln -sn "libtyrant.so.$(VERSION_MAJOR)" "$(DEST_DIR)/usr/lib/libtyrant.so"
+	install -Dm755 "build/lib/lib$(NAME).so"        "$(DEST_DIR)/usr/lib/lib$(NAME).so.$(VERSION)"
+	ln -snf        "lib$(NAME).so.$(VERSION)"       "$(DEST_DIR)/usr/lib/lib$(NAME).so.$(VERSION_MAJOR)"
+	ln -snf        "lib$(NAME).so.$(VERSION_MAJOR)" "$(DEST_DIR)/usr/lib/lib$(NAME).so"
 	
-	install -Dm644 -t "$(DEST_DIR)/usr/lib/" "build/lib/libtyrant.a"
-	install -Dm644 -t "$(DEST_DIR)/usr/include/tyrant/" "build/include/tyrant/tyrant.h"
-	install -Dm644 -t "$(DEST_DIR)/usr/share/licenses/tyrant/" "LICENSE"
-	install -Dm644 -t "$(DEST_DIR)/usr/share/doc/tyrant/" "README.md"
+	install -Dm644 -t "$(DEST_DIR)/usr/lib/"                    "build/lib/lib$(NAME).a"
+	install -Dm644 -t "$(DEST_DIR)/usr/include/$(NAME)/"        "build/include/$(NAME)/$(NAME).h"
+	install -Dm644 -t "$(DEST_DIR)/usr/share/licenses/$(NAME)/" "LICENSE"
+	install -Dm644 -t "$(DEST_DIR)/usr/share/doc/$(NAME)/"      "README.md"
 
 # clean
 
